@@ -5,6 +5,15 @@ let title   = "StartProjectJS",
 	 fullPrice = 2000,
 	 adaptive = true;
 
-alert("Нужно больше золота - загляните в консоль.");
+console.log("title - " + typeof(title) +
+"\nfullPrice - " + typeof(screenPrice) +
+"\nadaptive - "  + typeof(adaptive));
 
-console.log("Нужно построить зиккурат.");
+console.log("Длина строки в переменной screens: " + screens.length);
+
+console.log ("Стоимость верстки экранов - " + screenPrice + "$" +
+				 "\nСтоимость разработки сайта - " + fullPrice + "$");
+
+console.log((screens.toLowerCase()).split(", "));
+
+console.log("Процент отката посреднику за работу - " + (fullPrice * (rollback/100)) + "$");
