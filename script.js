@@ -1,9 +1,9 @@
-let title,
-	 screens,
-	 screenPrice,
-	 rollback,
-	 fullPrice,
-	 adaptive;
+let title   = "StartProjectJS",
+	 screens = "Простые, Сложные, Интерактивные",
+	 screenPrice = 500,
+	 rollback = 30,
+	 fullPrice = 2000,
+	 adaptive = true;
 
 alert("Нужно больше золота - загляните в консоль.");
 
