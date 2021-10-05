@@ -6,21 +6,29 @@ let screenPrice = prompt("Сколько $ будет стоить данная 
 let rollback = 30;
 let adaptive = confirm("Нужен ли адаптив на сайте?");
 let answers = [];
+let countQuestion = +prompt("Какое количество дополнительных услуг вам понадобится?", "2");
+let sumAllServisePrice = 0;
 
-for(let i = 0; i < 2; i++) {
-	let firstQuestion = prompt("Какой вид услуги вам нужен?", "Добавить слайдер");
-	let secondQuestion = prompt("Сколько $ это будет?", "50");
+for(let i = 0; i < countQuestion; i++) {
 	answers.push({
-		service: firstQuestion,
-		servicePrice: secondQuestion
+		service: prompt("Какой вид услуги вам нужен?", "Добавить слайдер"),
+		servicePrice: prompt("Сколько $ это будет стоить?", "50")
 	});
 }
 //Функция счета стоимости работы + доп услуг
-const fullPriceSum = (firstServicePrice, secondServicePrice, screensPrice) => {  
-	return screensPrice + firstServicePrice + secondServicePrice;
+const fullPriceSum = (screensPrice, callback, arrayLength) => {  
+	return screensPrice + callback(arrayLength);
 };
 
-let fullPrice = fullPriceSum(parseInt(screenPrice), parseInt(answers[0].servicePrice),parseInt(answers[1].servicePrice));
+//Функция подсчета стоимости всех услуг
+const fullServicePrice = (length) => {
+	for(let i = 0; i < length; i++){
+		sumAllServisePrice = parseInt(sumAllServisePrice) + parseInt(answers[i].servicePrice);
+	}
+	return sumAllServisePrice;
+};
+
+let fullPrice = fullPriceSum(parseInt(screenPrice), fullServicePrice, answers.length);
 
 let agentWorkPrice = (fullPrice * (rollback/100));
 console.log("Процент отката посреднику за работу - " + agentWorkPrice + "$");
@@ -31,14 +39,12 @@ console.log("Полная стоимость работы округленная
 console.log ("Стоимость верстки экранов - " + screenPrice + "$" +
 				 "\nСтоимость разработки сайта - " + fullPrice + "$");
 
-	if(fullPrice > 2000) {
-		fullPrice = fullPrice - (fullPrice / 100 * 10) 
-		console.log("Мы даем вам скидку в 10% -> Стоимость с учетом скидки = " + fullPrice + "$");
+	if(fullPrice > 2000) { 
+		console.log("Мы даем вам скидку в 10%");
 	} else if (fullPrice >= 500 && fullPrice <= 2000) {
-		fullPrice = fullPrice - (fullPrice / 100 * 10) 
-		console.log("Мы даем вам скидку в 5% -> Стоимость с учетом скидки = " + fullPrice + "$");
+		console.log("Мы даем вам скидку в 5%");
 	} else if (fullPrice <= 500 && fullPrice >= 0) {
-		console.log("Скидка не предусмотрена -> Полная стоимость = " + fullPrice + "$");
+		console.log("Скидка не предусмотрена");
 	} else {
 		console.log("Что-то пошло не так");
 	}
