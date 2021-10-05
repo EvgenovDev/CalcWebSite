@@ -16,7 +16,7 @@ for(let i = 0; i < 2; i++) {
 	});
 }
 //Функция счета стоимости работы + доп услуг
-let fullPriceSum = (firstServicePrice, secondServicePrice, screensPrice) => {  
+const fullPriceSum = (firstServicePrice, secondServicePrice, screensPrice) => {  
 	return screensPrice + firstServicePrice + secondServicePrice;
 };
 
