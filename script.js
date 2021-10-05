@@ -49,10 +49,8 @@ console.log ("Стоимость верстки экранов - " + screenPrice
 		console.log("Что-то пошло не так");
 	}
 
-console.log("title - " + typeof(title) +
-"\nfullPrice - " + typeof(screenPrice) +
-"\nadaptive - "  + typeof(adaptive));
-
+console.log("title - " + typeof(title));
+console.log("fullPrice - " + typeof(screenPrice));
+console.log("adaptive - "  + typeof(adaptive));
 console.log("Длина строки в переменной screens: " + screens.length);
-
 console.log((screens.toLowerCase()).split(", "));
