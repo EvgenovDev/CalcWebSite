@@ -1,13 +1,31 @@
 "use strict";
 
-let title   = prompt("Введите название проекта", "Приложение для расчета стоимости услуги");
-let screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
-let screenPrice = prompt("Сколько $ будет стоить данная работа?", "2000");
+let title;
+let screens; 
+let adaptive;
+let countQuestion; 
+let fullPrice;
+let agentWorkPrice;
+let servicePercentPrice;
+let screenPrice;
 let rollback = 30;
-let adaptive = confirm("Нужен ли адаптив на сайте?");
 let answers = [];
-let countQuestion = +prompt("Какое количество дополнительных услуг вам понадобится?", "2");
 let sumAllServisePrice = 0;
+
+const asking = () => {
+	title   = prompt("Введите название проекта", "Приложение для расчета стоимости услуги");
+
+	do {
+		screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
+	} while (!isNumber(screens));
+
+	adaptive = confirm("Нужен ли адаптив на сайте?");
+	countQuestion = +prompt("Какое количество дополнительных услуг вам понадобится?", "2");
+}
+
+const isNumber = (num) => {
+	return !isNaN(parseFloat(num)) && isFinite(parseFloat(num));
+}
 
 //Функция рассчета стоимости работы + доп услуг
 function fullPriceSum (screensPrice, callback, arrayLength) {  
@@ -42,6 +60,10 @@ const servicePriceQuestions = (count) => {
 		});
 	}
 };
+//Функция получения значения screenPrice от пользователя 
+const getScreenPrice = () => {
+
+};
 
 const getServicePricePercent = () =>{
 	return Math.ceil(fullPrice - agentWorkPrice);
@@ -69,10 +91,12 @@ const getTitle = (str) => {
 	}
 };
 
+asking();
 servicePriceQuestions(countQuestion);
-let fullPrice = fullPriceSum(parseInt(screenPrice), fullServicePrice, answers.length);
-let agentWorkPrice = getAgentWorkPrice();
-let servicePercentPrice = getServicePricePercent();
+
+fullPrice = fullPriceSum(parseInt(screenPrice), fullServicePrice, answers.length);
+agentWorkPrice = getAgentWorkPrice();
+servicePercentPrice = getServicePricePercent();
 title = getTitle(title);
 
 console.log(showTypeOf(title));
