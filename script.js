@@ -14,14 +14,11 @@ let sumAllServisePrice = 0;
 
 const asking = () => {
 	title   = prompt("Введите название проекта", "Приложение для расчета стоимости услуги");
-
-	do {
-		screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
-	} while (!isNumber(screens));
-
+	screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
 	adaptive = confirm("Нужен ли адаптив на сайте?");
 	countQuestion = +prompt("Какое количество дополнительных услуг вам понадобится?", "2");
 }
+
 
 const isNumber = (num) => {
 	return !isNaN(parseFloat(num)) && isFinite(parseFloat(num));
