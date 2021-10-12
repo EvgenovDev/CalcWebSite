@@ -115,8 +115,11 @@ let appData = {
 	//Функция заполнения массива с доп услугами
 	servicePriceQuestions: (count) => {
 		for(let i = 0; i < count; i++) {
-			let firstAnswer = prompt("Какой вид услуги вам нужен?", "Добавить слайдер");
+			let firstAnswer;
 			let secondAnswer;
+			do {
+				firstAnswer = prompt("Какой вид услуги вам нужен?", "Добавить слайдер");
+			} while(appData.isNumber(firstAnswer));
 			do {
 				secondAnswer = prompt("Сколько $ это будет стоить?", "50");
 			} while (!appData.isNumber(secondAnswer));
