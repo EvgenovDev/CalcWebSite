@@ -1,5 +1,5 @@
 "use strict";
-
+// Основное
 const title = document.getElementsByTagName("h1");
 console.log(title[0]);
 const buttons = document.getElementsByClassName("handler_btn");
