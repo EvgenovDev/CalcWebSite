@@ -73,7 +73,6 @@ let appData = {
 		appData.agentWorkPrice = 0,
 		appData.serviceNumberPrice = 0,
 		appData.servicePercentPrice = 0,
-		appData.rollback = 0,
 		appData.servicesPercent = {},
 		appData.servicesNumber = {}
 	},
