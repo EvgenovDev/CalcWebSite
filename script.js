@@ -61,6 +61,21 @@ let appData = {
 		appData.addPrices();
 		appData.showResult();
 		console.log(appData);
+		appData.clear();
+	},
+
+	clear: () => {
+		appData.screens = [], 
+		appData.screensCount = 0,
+		appData.screenPrice = 0,
+		appData.fullPrice = 0,
+		appData.serviceWorkPercent = 0,
+		appData.agentWorkPrice = 0,
+		appData.serviceNumberPrice = 0,
+		appData.servicePercentPrice = 0,
+		appData.rollback = 0,
+		appData.servicesPercent = {},
+		appData.servicesNumber = {}
 	},
 
 	showResult: () => {
