@@ -1,96 +1,100 @@
 "use strict";
-// Основное
-const title = document.getElementsByTagName("h1");
-console.log(title[0]);
-const buttons = document.getElementsByClassName("handler_btn");
-for(let i = 0; i < buttons.length; i++) {
-	console.log(buttons[i]);
-}
+const title = document.getElementsByTagName("h1")[0];
+const buttonStart = document.getElementsByClassName("handler_btn")[0];
+const buttonReset = document.getElementsByClassName("handler_btn")[1];
 const buttonPlus = document.querySelector(".screen-btn");
-console.log(buttonPlus);
-const otherItems1 = document.querySelectorAll(".other-items.percent").forEach((elem) => {
-	console.log(elem);
-});
-const otherItems2 = document.querySelectorAll(".other-items.number").forEach((elem) => {
-	console.log(elem);
-});
+const otherItems1 = document.querySelectorAll(".other-items.percent");
+const otherItems2 = document.querySelectorAll(".other-items.number");
+
 const rollbackInput = document.querySelector('.rollback [type="range"]');
-console.log(rollbackInput);
-const span1 = document.querySelector('.rollback .range-value');
-console.log(span1);
+const inputRangeValue = document.querySelector('.rollback .range-value');
+
 const totalInputs = document.getElementsByClassName("total-input");
-for(let i = 0; i < totalInputs.length; i++) {
-	console.log(totalInputs[i]);
-}
-let screenDiv = document.querySelectorAll(".screen").forEach((elem) => {
-	console.log(elem);
-});
 
+let screenDiv = document.querySelectorAll(".screen");
 
+let appData = {
+	 title: '',
+	 screens: [], 
+	 screenPrice: 0,
+	 adaptive: true,
+	 countQuestion: 0, 
+	 fullPrice: 0,
+	 agentWorkPrice: 0,
+	 servicePercentPrice: 0,
+	 rollback: 30,
+	 servicesPercent: {},
+	 servcesNumber: {},
 
-// let appData = {
-// 	 title: '',
-// 	 screens: [], 
-// 	 screenPrice: 0,
-// 	 adaptive: true,
-// 	 countQuestion: 0, 
-// 	 fullPrice: 0,
-// 	 agentWorkPrice: 0,
-// 	 servicePercentPrice: 0,
-// 	 rollback: 30,
-// 	 answers: [],
+	 init: () => {
+		appData.addTitle();
+		setInterval(() => appData.success(), 1000);
+		appData.addServices();
 
-// 	start: () => {
-// 	appData.asking();
-// 	appData.sumAllScreenPrice();
-// 	appData.fullPriceSum(appData.screenPrice, appData.fullServicePrice, appData.answers.length);
-// 	appData.getAgentWorkPrice();
-// 	appData.getServicePricePercent();
-// 	appData.getTitle(appData.title);
-// 	appData.logger();
-// 	},
+		buttonPlus.addEventListener("click", appData.addScreenBlock);
+		buttonStart.addEventListener("click", appData.start);
 
-// 	 asking: () => {
-// 		appData.questionTitle();
-// 		appData.questionScreenPrice();
-// 		appData.questionAdaptive();
-// 		appData.questionCount();
-// 		appData.servicePriceQuestions(appData.countQuestion);
-// 	},
+	 },
 
-// 	questionTitle: () => {
-// 		do {
-// 			appData.title = prompt("Введите название проекта", "Приложение для расчета стоимости услуги");
-// 		} while (appData.isNumber(appData.title));
-// 	},
-	
-// 	questionAdaptive: () => {
-// 		do {
-// 			appData.adaptive = confirm("Нужен ли адаптив на сайте?");
-// 		} while(appData.isNumber(appData.adaptive));
-// 	},
+	 success: () => {
+		if (screenDiv[0].querySelector("select").selectedIndex === 0 || screenDiv[0].querySelector("input").value === "") {
+			buttonStart.disabled = true;
+		} else { 	
+			buttonStart.disabled = false;
+		}
+	 },
 
-// 	questionCount: () => {
-// 		do {
-// 			appData.countQuestion = +prompt("Какое количество дополнительных услуг вам понадобится?", "2");
-// 		} while (!appData.isNumber(appData.countQuestion));
-// 		appData.saveNumber(appData.countQuestion);
-// 	},
+	start: () => {
+		appData.addScreenPrice();
+		console.log(appData);
+	// appData.asking();
+	// appData.sumAllScreenPrice();
+	// appData.fullPriceSum(appData.screenPrice, appData.fullServicePrice, appData.answers.length);
+	// appData.getAgentWorkPrice();
+	// appData.getServicePricePercent();
+	// appData.logger();
+	},
 
-// 	questionScreenPrice: () => {
-// 		let count;
-// 		let question;
-// 		for (let i = 0; i < 2; i++){
-// 			do {
-// 				question = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
-// 			} while(appData.isNumber(question));
-// 			do {
-// 				count = prompt("Сколько $ будет стоить данная работа?", "2000");
-// 			} while (!appData.isNumber(count));
-// 			count = appData.saveNumber(count); 
-// 			appData.screens.push({id: i, name: question, price: count});
-// 		}
-// 	},
+	//  asking: () => {
+	// 	appData.servicePriceQuestions(appData.countQuestion);
+	// },
+
+	addServices: () => { 
+		otherItems1.forEach((elem) => {
+			const label = elem.querySelector("label").textContent;
+			const percent = elem.querySelector('input[type=text]').value;
+			const check = elem.querySelector('input[type=checkbox]');
+			 if (check.checked) {
+					appData.servicesPercent[label] = +percent;
+			 }
+		});
+	},
+
+	addScreenBlock: () => {	
+		screenDiv = document.querySelectorAll(".screen");
+		const clone = screenDiv[0].cloneNode(true);
+		screenDiv[screenDiv.length - 1].after(clone);
+		clone.querySelector("input").value = "";
+	},
+
+	addScreenPrice: () => {
+		screenDiv = document.querySelectorAll(".screen");
+		screenDiv.forEach((elem, index) => {
+			const select = elem.querySelector("select");
+			const input = elem.querySelector("input");
+			const selectName = select.options[select.selectedIndex].textContent;
+
+			appData.screens.push({
+				id: index,
+				name: selectName,
+				price: +input.value * +select.value
+			});
+		});
+	},
+
+	addTitle: () => {
+		document.title = title.textContent;
+	},
 
 // 	sumAllScreenPrice: () => {
 // 		appData.screenPrice = appData.screens.reduce((sum, current) => {
@@ -170,20 +174,6 @@ let screenDiv = document.querySelectorAll(".screen").forEach((elem) => {
 // 		return variable + " - " + typeof variable;
 // 	},
 	
-// 	getTitle: (str) => {
-// 		if (str === null) {
-// 			appData.title =  "Нет названия проекта";
-// 		} else if (str[0] != " ") {
-// 			appData.title =  str[0].toUpperCase() + str.substring(1, str.length).toLowerCase();
-// 		} else {
-// 			let i = 1;
-// 			do{
-// 				i++;
-// 			} while (str[i] == " ");
-// 			appData.title =  str[i].toUpperCase() + str.substring(i + 1, str.length).toLowerCase();
-// 		}
-// 	},
-	
 // 	logger: () => {
 // 		console.log(appData.showTypeOf(appData.title));
 // 		console.log(appData.showTypeOf(appData.screens));
@@ -196,6 +186,6 @@ let screenDiv = document.querySelectorAll(".screen").forEach((elem) => {
 // 		}
 // 	}
 
-// };
+};
 
-// appData.start();
+appData.init();
