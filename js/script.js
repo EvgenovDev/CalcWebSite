@@ -6,6 +6,14 @@ const buttonPlus = document.querySelector(".screen-btn");
 
 const otherItems1 = document.querySelectorAll(".other-items.percent");
 const otherItems2 = document.querySelectorAll(".other-items.number");
+const customCheckbox = document.querySelectorAll(".custom-checkbox");
+
+const cmsOpen = document.getElementById("cms-open");
+const cmsSelect = document.getElementById("cms-select");
+const cmsDivInput = document.querySelector(".hidden-cms-variants > .main-controls__input");
+const cmsInput = document.getElementById("cms-other-input");
+const cmsDivOpen = document.querySelector(".hidden-cms-variants");
+
 const rollbackInput = document.querySelector('.rollback [type="range"]');
 const inputRangeValue = document.querySelector('.rollback .range-value');
 
@@ -32,18 +40,35 @@ let appData = {
 
 	init: function() {
 		this.addTitle();
-		setInterval(() => this.success(), 1000);
+		setInterval(() => this.success(), 10);
 
 		buttonPlus.addEventListener("click", this.addScreenBlock);
 		buttonStart.addEventListener("click", this.start);
+		buttonReset.addEventListener("click", this.reset);
+		
 		rollbackInput.addEventListener("input", () => {
 			inputRangeValue.textContent = rollbackInput.value + "%";
 			this.rollback = rollbackInput.value;
 		});
-		buttonReset.addEventListener("click", this.reset);
+
+		cmsOpen.addEventListener("click", () => {
+			if (cmsOpen.checked) {
+				cmsDivOpen.style.display = "flex";
+			} else {
+				cmsDivOpen.style.display = "none";
+			}
+		});
+
+		cmsSelect.addEventListener("change", () => {
+			if (cmsSelect.options[2].selected) {
+				cmsDivInput.style.display = "flex";
+			} else {
+				cmsDivInput.style.display = "none";
+			}
+		});
 	},
 
-	success: () => {
+	success: function() {
 		screenDiv = document.querySelectorAll(".screen");
 			for(let i = 0; i < screenDiv.length; i++) {
 				if (screenDiv[i].querySelector("select").selectedIndex === 0 || screenDiv[i].querySelector("input").value === "") {
@@ -55,7 +80,9 @@ let appData = {
 			}
 	},
 
-	start: () => {
+	start: function() {
+		buttonStart.style.display = "none";
+		buttonReset.style.display = "block";
 		appData.addScreenPrice();
 		appData.addServicesPercent();
 		appData.addServicesNumber();
@@ -81,8 +108,8 @@ let appData = {
 		total.value = this.screenPrice;
 		totalCount.value = this.screensCount;
 		totalCountOther.value = this.serviceNumberPrice + this.servicePercentPrice;
-		totalFullCount.value = this.fullPrice;
-		totalCountRollback.value = this.serviceWorkPercent;
+		totalFullCount.value = Math.ceil(this.fullPrice);
+		totalCountRollback.value = Math.ceil(this.serviceWorkPercent);
 	},
 
 	reset: function() {
@@ -94,31 +121,49 @@ let appData = {
 		screenDiv[0].querySelector("input").value = "";
 		screenDiv[0].querySelector("input").placeholder = "Количество экранов";
 		screenDiv[0].querySelector("select").options[0].selected = true;
+		buttonStart.style.display = "block";
+		buttonReset.style.display = "none";
 		appData.allDisabled();
 		appData.showResult();
-		otherItems1.forEach((elem) => {
-			elem.querySelector("input").checked = false;
+		customCheckbox.forEach((elem) => {
+			elem.checked = false;
 		});
-		otherItems2.forEach((elem) => {
-			elem.querySelector("input").checked = false;
-		});
+		cmsDivOpen.style.display = "none";
+		rollbackInput.value = 0;
+		inputRangeValue.textContent = rollbackInput.value + "%";
+		cmsSelect.options[0].selected = true;
+		cmsInput.value = "";
+		cmsDivInput.style.display = "none";
 	},
 
-	allDisabled: () => {
+	
+	allDisabled: function() {
 		screenDiv = document.querySelectorAll(".screen");
-		screenDiv.forEach((elem) => {
-			if (elem.querySelector("select").disabled === false){
+		if (buttonStart.style.display == "none") {
+			screenDiv.forEach((elem) => {
 				elem.querySelector("select").disabled = true;
 				elem.querySelector("input").disabled = true;
-				buttonStart.style.display = "none";
-				buttonReset.style.display = "block";
-			} else {
+			});
+			rollbackInput.disabled = true;
+			cmsSelect.disabled = true;
+			buttonPlus.disabled = true;
+			cmsInput.disabled = true;
+			customCheckbox.forEach((elem) => {
+				elem.disabled = true;
+			});
+		} else if (buttonStart.style.display == "block"){
+			screenDiv.forEach((elem) => {
 				elem.querySelector("select").disabled = false;
 				elem.querySelector("input").disabled = false;
-				buttonStart.style.display = "block";
-				buttonReset.style.display = "none";
-			}
-		});
+			});
+			rollbackInput.disabled = false;
+			cmsSelect.disabled = false;
+			buttonPlus.disabled = false;
+			cmsInput.disabled = false;
+			customCheckbox.forEach((elem) => {
+				elem.disabled = false;
+			});
+		}
 	},
 
 	addServicesPercent: function () { 
@@ -143,7 +188,7 @@ let appData = {
 		});
 	},
 
-	addScreenBlock: () => {	
+	addScreenBlock: function() {	
 		screenDiv = document.querySelectorAll(".screen");
 		const clone = screenDiv[0].cloneNode(true);
 		screenDiv[screenDiv.length - 1].after(clone);
@@ -166,7 +211,7 @@ let appData = {
 		});
 	},
 
-	addTitle: () => {
+	addTitle: function() {
 		document.title = title.textContent;
 	},
 
@@ -188,7 +233,19 @@ let appData = {
 			this.servicePercentPrice += (this.screenPrice * (this.servicesPercent[key]/100));	
 		}
 		// Подсчет всей суммы
-		this.fullPrice = this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice;
+		if (cmsSelect.options[1].selected) {
+			this.fullPrice = 
+			(this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice) + 
+			(this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice) *
+			 +cmsSelect.options[1].value / 100;
+		} else if (cmsSelect.options[2].selected) {
+			this.fullPrice = 
+			(this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice) + 
+			(this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice) *
+			+cmsInput.value / 100;
+		} else {
+			this.fullPrice = (this.servicePercentPrice + this.serviceNumberPrice + this.screenPrice)
+		}
 		// Подсчет суммы посредника
 		this.agentWorkPrice =  (this.fullPrice * (this.rollback/100));
 		// Подсчет стоимости с учетом отката
