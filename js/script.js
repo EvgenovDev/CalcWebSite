@@ -38,14 +38,23 @@ let appData = {
 	 servicesPercent: {},
 	 servicesNumber: {},
 
+	 bindAll: function () {
+		for (let key in appData) {
+			if (typeof appData[key] == "function") {
+				appData[key] = appData[key].bind(appData);
+			}
+		}
+	 },
+
 	init: function() {
+		this.bindAll();
 		this.addTitle();
 		setInterval(() => this.success(), 10);
 
 		buttonPlus.addEventListener("click", this.addScreenBlock);
 		buttonStart.addEventListener("click", this.start);
 		buttonReset.addEventListener("click", this.reset);
-		
+
 		rollbackInput.addEventListener("input", () => {
 			inputRangeValue.textContent = rollbackInput.value + "%";
 			this.rollback = rollbackInput.value;
@@ -83,12 +92,12 @@ let appData = {
 	start: function() {
 		buttonStart.style.display = "none";
 		buttonReset.style.display = "block";
-		appData.addScreenPrice();
-		appData.addServicesPercent();
-		appData.addServicesNumber();
-		appData.addPrices();
-		appData.showResult();
-		appData.allDisabled();
+		this.addScreenPrice();
+		this.addServicesPercent();
+		this.addServicesNumber();
+		this.addPrices();
+		this.showResult();
+		this.allDisabled();
 	},
 
 	clear: function () {
@@ -113,7 +122,7 @@ let appData = {
 	},
 
 	reset: function() {
-		appData.clear();
+		this.clear(); //
 		screenDiv = document.querySelectorAll(".screen");
 		for (let i = 1; i < screenDiv.length; i++) {
 			screenDiv[i].remove();
@@ -123,8 +132,8 @@ let appData = {
 		screenDiv[0].querySelector("select").options[0].selected = true;
 		buttonStart.style.display = "block";
 		buttonReset.style.display = "none";
-		appData.allDisabled();
-		appData.showResult();
+		this.allDisabled(); //
+		this.showResult(); //
 		customCheckbox.forEach((elem) => {
 			elem.checked = false;
 		});
